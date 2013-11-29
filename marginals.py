@@ -2,6 +2,29 @@
 import numpy as np
 
 class Marginals(object):
+    """This class calculates the marginal probability of all parameters 
+    from the output of a MultiNest run of nested sampling.
+    MultiNest produces a file of called [root].txt which contains 2 + num. of 
+    parameters columns.
+    Col 1: normalised log-probabilities
+    Col 2: -2*loglikelihoods
+    Col 3:n corresponding parameter sets
+
+    This class bins the probabilities and produces output that can go
+    straight into ggplot in R without faffing about! 
+
+    TODO:
+    So many things!!!
+    Make a superclass called sth like NSOutput (make Marginals etc. sub-classes)
+    Get the best-fit param set; def get_best_fit(self) (sub-class, use super?)
+    Calculate joint probabilities too (sub-class it?)
+    Documentation (ReST?)
+    Put in some try/except blocks that actually work.
+    See if can get the __str__ to do what I want (can't return a list)
+    Ensure it's Python 3 compatible
+    Discover if you can call class method without typing the classname
+    Get emacs to not put tabs, just 4 space indents (avoids M-x untabify)
+    Credible intervals using other MultiNest file?"""
     def __init__(self, data, bins, lower_bounds=None, upper_bounds=None):
         self.logweights = data[:,0]
         self.chisq = data[:,1]
@@ -29,6 +52,8 @@ class Marginals(object):
     #           raise ValueError("Bounds must either be upper or lower!")
     #     return bounds
     def getbounds(self,direction):
+	"""Find the upper and lower bounds of the parameter values if the 
+	user didn't supply the ones they want to use."""
         bounds = np.array([None]*self.numParams, dtype=np.float64)
         if direction=="lower":
             for i in range(self.numParams):
@@ -41,11 +66,15 @@ class Marginals(object):
         return bounds
 
     def getbinwidths(self):
+	"""Find the widths of each bin. Designed to allow different bin 
+	widths per parameter."""
         binwidths = (self.upper_bounds - self.lower_bounds)/ \
                    np.array([float(i) for i in self.bins])
         return binwidths
 
     def fillbins(self):
+	"""Fill the bins with the probability weights. Does the most 
+	important work!"""
         # binheights = np.array([None]*self.numParams*np.max(self.bins), 
         #            dtype=np.float64).reshape((np.max(self.bins),self.numParams))
         binheights = np.zeros((np.max(self.bins),self.numParams))
@@ -61,18 +90,24 @@ class Marginals(object):
         return binheights
    
     def getmean(self):
+	"""Calculates mean average of each parameter"""
         mean = {"Parameter-%s" % i:np.sum(self.logweights*self.parameters[:,i])
                                         for i in range(self.numParams)}
         return mean
 
     def getSD(self):
-        # Need to check that mean dict exists
+	"""Calculates the standard deviation of each parameter"""
+        # Need to check that mean dict exists OR maybe not......
         SD = {"Parameter-%s" % i:np.sqrt(np.sum(self.logweights * \
              self.parameters[:,i]**2) - Marginals.getmean(self)["Parameter-%s"% 
                 i]**2) for i in range(self.numParams)}
         return SD
 
     def print_marginals(self):
+	"""Currently prints out the results in the format required.
+        It's possible the binned probabilities need to be divided by their
+        binwidths either in fillbins() or in a separate function. Do this to
+        normalise properly (i.e. so area = 1)."""
         for parameter in range(np.shape(Marginals.fillbins(self))[1]):
             for index, probability in enumerate(Marginals.fillbins(self)):
                 print("{:g}\t{:g}\tParam{:d}".format(self.lower_bounds[
@@ -94,8 +129,7 @@ if __name__=="__main__":
     records = np.loadtxt("REP.txt")
     nickneeds =  Marginals(records, [320, 120, 100, 100, 100, 100, 100], 
                  [0,100,0,0,0,0,0], [4,160,50,50,50,50,50])
-
-    nickneeds.print_marginals()
+    #nickneeds.print_marginals()
 
 
 
@@ -127,3 +161,14 @@ if __name__=="__main__":
 # for marg in margs:
 #     sth = marg.fillbins()
 #     print sth
+
+
+        # if lower_bounds != None:
+        #     try:
+        #         print "HERE", lower_bounds, self.numParams
+        #         #len(lower_bounds)==self.numParams
+        #         lower_bounds[self.numParams]
+        #         self.lower_bounds = np.array(lower_bounds)
+        #     except IndexError: print "shitthebed*******************"
+        #     # except Exception as e:
+        #     #     print "Feeerrucckkkk", e
