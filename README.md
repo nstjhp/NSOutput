@@ -1,4 +1,4 @@
 NSOutput
 ========
 
-Produce posterior summaires from nested sampling results
+Produce posterior summaries from nested sampling results.
