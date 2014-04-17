@@ -92,6 +92,28 @@ class Marginals(object):
         #print "mysum",np.nansum(binheights)
         return binheights
    
+    def fill_joint_bins(self):
+	"""Fill the joint bins with the probability weights. Does the most 
+	important work!"""
+        binheights = np.zeros((np.max(self.bins),self.numParams,self.numParams))
+        all_binwidths = Marginals.getbinwidths(self)
+        for i in range(self.numParams):
+            binwidthX = all_binwidths[i]
+            for k in range(self.numParams):
+                binwidthY = all_binwidths[k]
+                for j in range(self.bins[i]):
+                        in_bin = ((((self.lower_bounds[i] + j*binwidthX) <=  
+                                 self.parameters[:,i]) & (self.parameters[:,i] < 
+                                 (self.lower_bounds[i] + (j+1)*binwidthX))) &
+                                  (((self.lower_bounds[k] + l*binwidthY) <=  
+                                  self.parameters[:,k]) & (self.parameters[:,k] < 
+                                  (self.lower_bounds[k] + (l+1)*binwidthY)))) 
+                        print(i,j,k,in_bin)
+                        bin_sum = np.sum(self.logweights[in_bin])
+                        print(i,j,k,bin_sum)
+                        binheights[j][k][i] = bin_sum
+        return binheights
+
     def getmean(self):
 	"""Calculates mean average of each parameter and returns a dictionary"""
         mean = {"Parameter-%s" % i:np.sum(self.logweights*self.parameters[:,i])
@@ -111,7 +133,7 @@ class Marginals(object):
         It's possible the binned probabilities need to be divided by their
         binwidths either in fillbins() or in a separate function. Do this to
         normalise properly (i.e. so area = 1)."""
-        bin_heights = Marginals.fillbins(self)
+        bin_heights = Marginals.fill_bins(self)
         bin_widths = Marginals.getbinwidths(self)
         for parameter in range(np.shape(bin_heights)[1]):
             for index, probability in enumerate(bin_heights):
@@ -119,6 +141,20 @@ class Marginals(object):
                       parameter] + bin_widths[parameter]*(index + 0.5),
                       probability[parameter]/bin_widths[parameter], parameter))
         return  
+
+    def print_joints(self):
+	"""Currently does ??????
+        It's possible the binned probabilities need to be divided by their
+        binwidths either in fillbins() or in a separate function. Do this to
+        normalise properly (i.e. so area = 1)."""
+        bin_heights = Marginals.fill_joint_bins(self)
+        bin_widths = Marginals.getbinwidths(self)
+        for parameterX in range(np.shape(bin_heights)[1]):
+            for parameterY in range(np.shape(bin_heights)[1]):
+                for index, probability in enumerate(bin_heights):
+                    for another_index in range(index):
+                	print("{:g}\t{:g}\t{:g}\tParam{:d}\tParam{:d}".format(self.lower_bounds[parameterX] + bin_widths[parameterX]*(index + 0.5),self.lower_bounds[parameterY] + bin_widths[parameterY]*(another_index + 0.5), probability[parameterX][parameterY]/bin_widths[parameterX]/bin_widths[parameterY], parameterX, parameterY))
+        return
 
     # def __str__(self):
     #     this_is_wrong = []
@@ -135,7 +171,8 @@ if __name__=="__main__":
     ##nickneeds = Marginals(records, [320, 120, 100, 100, 100, 100, 100], 
     ##             [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
     nickneeds.print_marginals()
-
+    print("**************")
+    nickneeds.print_joints()
 
 
 # for parameter in range(np.shape(nickneeds.fillbins())[1]):
