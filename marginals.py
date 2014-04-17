@@ -78,19 +78,22 @@ class Marginals(object):
         # binheights = np.array([None]*self.numParams*np.max(self.bins), 
         #            dtype=np.float64).reshape((np.max(self.bins),self.numParams))
         binheights = np.zeros((np.max(self.bins),self.numParams))
+        all_binwidths = Marginals.getbinwidths(self)
         for i in range(self.numParams):
-            binwidth = Marginals.getbinwidths(self)[i]
+            binwidth = all_binwidths[i]
             for j in range(self.bins[i]):
                 in_bin = (((self.lower_bounds[i] + j*binwidth) <=  
                          self.parameters[:,i]) & (self.parameters[:,i] < 
                          (self.lower_bounds[i] + (j+1)*binwidth)))
+		#print(i,j,in_bin)
                 bin_sum = np.sum(self.logweights[in_bin])
+		#print(i,j,bin_sum)
                 binheights[j][i] = bin_sum
         #print "mysum",np.nansum(binheights)
         return binheights
    
     def getmean(self):
-	"""Calculates mean average of each parameter"""
+	"""Calculates mean average of each parameter and returns a dictionary"""
         mean = {"Parameter-%s" % i:np.sum(self.logweights*self.parameters[:,i])
                                         for i in range(self.numParams)}
         return mean
@@ -108,12 +111,13 @@ class Marginals(object):
         It's possible the binned probabilities need to be divided by their
         binwidths either in fillbins() or in a separate function. Do this to
         normalise properly (i.e. so area = 1)."""
-        for parameter in range(np.shape(Marginals.fillbins(self))[1]):
-            for index, probability in enumerate(Marginals.fillbins(self)):
+        bin_heights = Marginals.fillbins(self)
+        bin_widths = Marginals.getbinwidths(self)
+        for parameter in range(np.shape(bin_heights)[1]):
+            for index, probability in enumerate(bin_heights):
                 print("{:g}\t{:g}\tParam{:d}".format(self.lower_bounds[
-                      parameter] + Marginals.getbinwidths(self)[parameter]*(
-                      index + 0.5), probability[parameter]/
-                      Marginals.getbinwidths(self)[parameter], parameter))
+                      parameter] + bin_widths[parameter]*(index + 0.5),
+                      probability[parameter]/bin_widths[parameter], parameter))
         return  
 
     # def __str__(self):
@@ -126,10 +130,11 @@ class Marginals(object):
 
 
 if __name__=="__main__":
-    records = np.loadtxt("REP.txt")
-    nickneeds =  Marginals(records, [320, 120, 100, 100, 100, 100, 100], 
-                 [0,100,0,0,0,0,0], [4,160,50,50,50,50,50])
-    #nickneeds.print_marginals()
+    records = np.loadtxt("simpleData.txt")##linearModel.txt")##REP.txt")
+    nickneeds = Marginals(records,[10]*2)##,[0.,-.75],[0.3,1.])
+    ##nickneeds = Marginals(records, [320, 120, 100, 100, 100, 100, 100], 
+    ##             [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
+    nickneeds.print_marginals()
 
 
 
