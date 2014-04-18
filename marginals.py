@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import numpy as np
 from itertools import combinations as iter_combi
-import sys
 
 class Marginals(object):
     """This class calculates the marginal probability of all parameters 
@@ -181,18 +180,18 @@ class Marginals(object):
 
 
 if __name__=="__main__":
-    records = np.loadtxt("linearModel.txt")##REP.txt")
-    nickneeds = Marginals(records,[100]*2)##,[0.,-.75],[0.3,1.])
+    #records = np.loadtxt("linearModel.txt")
+    #nickneeds = Marginals(records,[100]*2)##,[0.,-.75],[0.3,1.])
      
-    ##records = np.loadtxt("simpleData.txt")##linearModel.txt")##REP.txt")
-    ##nickneeds = Marginals(records,[10]*2)##,[0.,-.75],[0.3,1.])
+    ##records = np.loadtxt("simpleData.txt")
+    ##nickneeds = Marginals(records,[10]*2)
 
     ##newrecords = np.column_stack((records,abs(records[:,2] - records[:,3])))
     ##nickneeds = Marginals(newrecords,[10,10,5])
 
-    ##records = np.loadtxt("REP.txt")
-    ##nickneeds = Marginals(records, [320, 120, 100, 100, 100, 100, 100], 
-    ##             [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
+    #records = np.loadtxt("REP.txt")
+    #nickneeds = Marginals(records, [60, 120, 20, 20, 20, 20, 20], 
+    #             [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
 
     #nickneeds.print_marginals()
     nickneeds.print_joints()
