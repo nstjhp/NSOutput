@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 from itertools import combinations as iter_combi
+import sys
 
 class Marginals(object):
     """This class calculates the marginal probability of all parameters 
@@ -112,9 +113,10 @@ class Marginals(object):
                                            (self.parameters[:,pair[0]] < (self.lower_bounds[pair[0]] + (indX + 1)*binwidthX))) &\
                                           (((self.lower_bounds[pair[1]] + indY*binwidthY) <= self.parameters[:,pair[1]]) & \
                                            (self.parameters[:,pair[1]] < (self.lower_bounds[pair[1]] + (indY + 1)*binwidthY))))
-                    print in_bin
+                    print in_bin[0][:]
+                    #if indY==9: sys.exit()
                     bin_sum[indX][indY] = np.sum(self.logweights[in_bin[indX][:]])
-                    print bin_sum
+                    #print bin_sum
                     binheights[indX][indY][pair_index] = bin_sum[indX][indY]
         return binheights
 
@@ -153,11 +155,18 @@ class Marginals(object):
         normalise properly (i.e. so area = 1)."""
         bin_heights = Marginals.fill_joint_bins(self)
         bin_widths = Marginals.getbinwidths(self)
-        for parameterX in range(np.shape(bin_heights)[1]):
-            for parameterY in range(np.shape(bin_heights)[1]):
-                for index, probability in enumerate(bin_heights):
-                    for another_index in range(index):
-                	print("{:g}\t{:g}\t{:g}\tParam{:d}\tParam{:d}".format(self.lower_bounds[parameterX] + bin_widths[parameterX]*(index + 0.5),self.lower_bounds[parameterY] + bin_widths[parameterY]*(another_index + 0.5), probability[parameterX][parameterY]/bin_widths[parameterX]/bin_widths[parameterY], parameterX, parameterY))
+        all_pairs = list(iter_combi(range(self.numParams),2))
+
+        for pair_index, pair in enumerate(all_pairs):
+            parameterX = pair[0]
+            parameterY = pair[1]
+            bin_widthX = bin_widths[parameterX]
+            bin_widthY = bin_widths[parameterY]
+            for index, probability in enumerate(bin_heights):
+                for another_index in range(len(bin_heights)):
+                    #print index, another_index, probability[another_index][pair_index]
+                    print("{:g}\t{:g}\t{:g}\tParam{:d}\tParam{:d}".format(self.lower_bounds[parameterX] + bin_widthX*(index + 0.5), self.lower_bounds[parameterY] + bin_widthY*(another_index + 0.5), probability[another_index][pair_index]/bin_widthX/bin_widthY, parameterX, parameterY))
+
         return
 
     # def __str__(self):
