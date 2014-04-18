@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import numpy as np
+from itertools import combinations as iter_combi
 
 class Marginals(object):
     """This class calculates the marginal probability of all parameters 
@@ -93,25 +94,28 @@ class Marginals(object):
         return binheights
    
     def fill_joint_bins(self):
-	"""Fill the joint bins with the probability weights. Does the most 
-	important work!"""
-        binheights = np.zeros((np.max(self.bins),self.numParams,self.numParams))
+        """Fill the joint bins with the probability weights. Does the most 
+        important work!"""
+        binheights = np.zeros((np.max(self.bins), np.max(self.bins),
+                               len(list(iter_combi(range(self.numParams),2)))))
         all_binwidths = Marginals.getbinwidths(self)
-        for i in range(self.numParams):
-            binwidthX = all_binwidths[i]
-            for k in range(self.numParams):
-                binwidthY = all_binwidths[k]
-                for j in range(self.bins[i]):
-                        in_bin = ((((self.lower_bounds[i] + j*binwidthX) <=  
-                                 self.parameters[:,i]) & (self.parameters[:,i] < 
-                                 (self.lower_bounds[i] + (j+1)*binwidthX))) &
-                                  (((self.lower_bounds[k] + l*binwidthY) <=  
-                                  self.parameters[:,k]) & (self.parameters[:,k] < 
-                                  (self.lower_bounds[k] + (l+1)*binwidthY)))) 
-                        print(i,j,k,in_bin)
-                        bin_sum = np.sum(self.logweights[in_bin])
-                        print(i,j,k,bin_sum)
-                        binheights[j][k][i] = bin_sum
+        all_pairs = list(iter_combi(range(self.numParams),2))
+        in_bin = np.zeros([np.max(self.bins), np.max(self.bins)], dtype=bool)
+        bin_sum = np.zeros([np.max(self.bins), np.max(self.bins)])
+        for pair_index, pair in enumerate(all_pairs):
+            binwidthX = all_binwidths[pair[0]]
+            binwidthY = all_binwidths[pair[1]]
+            for indX in range(self.bins[pair[0]]):
+                for indY in range(self.bins[pair[1]]):
+                    print pair, indX, indY
+                    in_bin[indX][:] = ((((self.lower_bounds[pair[0]] + indX*binwidthX) <= self.parameters[:,pair[0]]) & \
+                                           (self.parameters[:,pair[0]] < (self.lower_bounds[pair[0]] + (indX + 1)*binwidthX))) &\
+                                          (((self.lower_bounds[pair[1]] + indY*binwidthY) <= self.parameters[:,pair[1]]) & \
+                                           (self.parameters[:,pair[1]] < (self.lower_bounds[pair[1]] + (indY + 1)*binwidthY))))
+                    print in_bin
+                    bin_sum[indX][indY] = np.sum(self.logweights[in_bin[indX][:]])
+                    print bin_sum
+                    binheights[indX][indY][pair_index] = bin_sum[indX][indY]
         return binheights
 
     def getmean(self):
