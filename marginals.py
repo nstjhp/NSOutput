@@ -74,7 +74,7 @@ class Marginals(object):
                    np.array([float(i) for i in self.bins])
         return binwidths
 
-    def fillbins(self):
+    def fill_bins(self):
 	"""Fill the bins with the probability weights. Does the most 
 	important work!"""
         # binheights = np.array([None]*self.numParams*np.max(self.bins), 
@@ -101,19 +101,21 @@ class Marginals(object):
                                len(list(iter_combi(range(self.numParams),2)))))
         all_binwidths = Marginals.getbinwidths(self)
         all_pairs = list(iter_combi(range(self.numParams),2))
-        in_bin = np.zeros([np.max(self.bins), np.max(self.bins)], dtype=bool)
+        in_bin = np.zeros([np.max(self.bins), len(self.logweights)], dtype=bool)
+        #in_bin = np.zeros([np.max(self.bins), np.max(self.bins)], dtype=bool)
         bin_sum = np.zeros([np.max(self.bins), np.max(self.bins)])
+        #print(in_bin)
         for pair_index, pair in enumerate(all_pairs):
             binwidthX = all_binwidths[pair[0]]
             binwidthY = all_binwidths[pair[1]]
             for indX in range(self.bins[pair[0]]):
                 for indY in range(self.bins[pair[1]]):
-                    print pair, indX, indY
+                    #print pair, indX, indY
                     in_bin[indX][:] = ((((self.lower_bounds[pair[0]] + indX*binwidthX) <= self.parameters[:,pair[0]]) & \
                                            (self.parameters[:,pair[0]] < (self.lower_bounds[pair[0]] + (indX + 1)*binwidthX))) &\
                                           (((self.lower_bounds[pair[1]] + indY*binwidthY) <= self.parameters[:,pair[1]]) & \
                                            (self.parameters[:,pair[1]] < (self.lower_bounds[pair[1]] + (indY + 1)*binwidthY))))
-                    print in_bin[0][:]
+                    #print in_bin[0][:]
                     #if indY==9: sys.exit()
                     bin_sum[indX][indY] = np.sum(self.logweights[in_bin[indX][:]])
                     #print bin_sum
@@ -179,12 +181,20 @@ class Marginals(object):
 
 
 if __name__=="__main__":
-    records = np.loadtxt("simpleData.txt")##linearModel.txt")##REP.txt")
-    nickneeds = Marginals(records,[10]*2)##,[0.,-.75],[0.3,1.])
+    records = np.loadtxt("linearModel.txt")##REP.txt")
+    nickneeds = Marginals(records,[100]*2)##,[0.,-.75],[0.3,1.])
+     
+    ##records = np.loadtxt("simpleData.txt")##linearModel.txt")##REP.txt")
+    ##nickneeds = Marginals(records,[10]*2)##,[0.,-.75],[0.3,1.])
+
+    ##newrecords = np.column_stack((records,abs(records[:,2] - records[:,3])))
+    ##nickneeds = Marginals(newrecords,[10,10,5])
+
+    ##records = np.loadtxt("REP.txt")
     ##nickneeds = Marginals(records, [320, 120, 100, 100, 100, 100, 100], 
     ##             [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
-    nickneeds.print_marginals()
-    print("**************")
+
+    #nickneeds.print_marginals()
     nickneeds.print_joints()
 
 
