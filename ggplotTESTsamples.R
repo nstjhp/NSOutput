@@ -104,28 +104,28 @@ plotRep06 = plotFunc(0,6,"beta","Y5 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c
 bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, ncol=3, nrow=2)
 
 
-## plotRep34 = plotFunc(3,4,"alpha","Y1 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep35 = plotFunc(3,5,"alpha","Y2 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep36 = plotFunc(3,6,"alpha","Y4 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep37 = plotFunc(3,7,"alpha","Y5 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep38 = plotFunc(3,8,"alpha","Y6 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep12 = plotFunc(1,2,"alpha","Y1 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep13 = plotFunc(1,3,"alpha","Y2 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep14 = plotFunc(1,4,"alpha","Y4 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep15 = plotFunc(1,5,"alpha","Y5 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep16 = plotFunc(1,6,"alpha","Y6 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
 
-## plotRep45 = plotFunc(4,5,"Y1 I.C.","Y2 I.C.")# + coord_cartesian(xlim=c(0, 50), ylim=c(0,50))
+## plotRep23 = plotFunc(2,3,"Y1 I.C.","Y2 I.C.")# + coord_cartesian(xlim=c(0, 50), ylim=c(0,50))
 
-## plotRep46 = plotFunc(4,6,"Y1 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep47 = plotFunc(4,7,"Y1 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep48 = plotFunc(4,8,"Y1 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep24 = plotFunc(2,4,"Y1 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep25 = plotFunc(2,5,"Y1 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep26 = plotFunc(2,6,"Y1 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
 
-## #print(plotRep45)
+## #print(plotRep23)
 
-## plotRep56 = plotFunc(5,6,"Y2 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep57 = plotFunc(5,7,"Y2 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep58 = plotFunc(5,8,"Y2 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-
-## plotRep67 = plotFunc(6,7,"Y4 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep68 = plotFunc(6,8,"Y4 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-
-## plotRep78 = plotFunc(7,8,"Y5 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep34 = plotFunc(3,4,"Y2 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep35 = plotFunc(3,5,"Y2 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep36 = plotFunc(3,6,"Y2 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+                           
+## plotRep45 = plotFunc(4,5,"Y4 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep46 = plotFunc(4,6,"Y4 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+                           
+## plotRep56 = plotFunc(5,6,"Y5 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
 
 bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, ncol=3, nrow=2)
 ## ##ggsave("RepJointsGrid2.pdf",
@@ -136,3 +136,18 @@ bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, p
 ##              plotRep67,plotRep68,
 ##               plotRep78,           
 ##                 nrow = 7, ncol=3), width= 7.5, height=10)
+
+
+## Lydia
+jointData = read.table("lydia.joints")
+colnames(jointData) = c("X","Y","Z", "Xname", "Yname", "width", "height")
+
+plotRep01 = plotFunc(0,1,"beta","alpha") 
+plotRep02 = plotFunc(0,2,"beta","Y1 I.C.")
+plotRep03 = plotFunc(0,3,"beta","Y1 I.C.") 
+plotRep12 = plotFunc(1,2,"alpha","Y1 I.C.")
+plotRep13 = plotFunc(1,3,"alpha","Y2 I.C.")
+plotRep23 = plotFunc(2,3,"Y1 I.C.","Y2 I.C.")
+bigplot <- arrangeGrob(plotRep01, plotRep02, plotRep03,
+                       plotRep12, plotRep13 ,plotRep23, ncol=3)
+print(bigplot)

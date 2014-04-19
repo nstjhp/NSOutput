@@ -194,7 +194,15 @@ if __name__=="__main__":
     # nickneeds = Marginals(records, [60, 90, 50, 50, 50, 50, 50], 
     #              [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
 
-    #nickneeds.print_marginals()
+    records = np.loadtxt("CurveA1posterior.csv", delimiter=",", skiprows=1)
+    ## Do the transformations. Divided logweights by logZ and exp().
+    ## Divide parareters by ln(10).
+    new_records = np.column_stack((np.exp(records[:,0] -
+                                   np.log(np.sum(np.exp(records[:,0])))), 
+                                   records[:,1], records[:,2:6]/np.log(10)))
+    nickneeds = Marginals(new_records,[50]*4, [0.,5.8,0.,0.], [6., 11.,0.04,43.])
+
+    ##nickneeds.print_marginals()
     nickneeds.print_joints()
 
 
