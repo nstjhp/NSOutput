@@ -1,4 +1,8 @@
 library(ggplot2)
+library(grid)
+library(gridExtra)
+library(scales)
+
 aa = read.table("REP_6_post1Dhist.ct2")
 
 # Both these ribbon and density calls do the same thing, I think because underlying them is geom_area
@@ -57,3 +61,78 @@ p3 = p2 + geom_point(data=df, aes(x=vecC, y=vecD), size=4, colour="hotpink") + g
 ## Have to constrict to known values of parameters. This is due to a fault with the Python class always printing more bins than necessary.
 p4 = p3 + ylim(c(0,1))
 print(p4)
+
+
+jointData = read.table("tjoin", header=FALSE)
+colnames(jointData) = c("X","Y","Z", "Xname", "Yname", "width", "height")
+
+## tableMeanMax = read.table("lvMeanAndMax4ggplot.txt", header=TRUE)
+
+cole= c("#272822","#880088","#FF3333","#FFEE00", "#FFFFDD")
+
+plotFunc <- function(variable1, variable2, name1, name2) {
+  jointData = jointData[jointData$Xname==paste0("Param",variable1) &
+                        jointData$Yname==paste0("Param",variable2),]
+  minZ = min(jointData$Z)
+  maxZ = max(jointData$Z)
+  diffZ = maxZ - minZ
+  p0 = ggplot()
+  p1 = p0 + geom_tile(data = jointData, aes(x=X, y=Y , fill = Z))
+  p2 = p1 + scale_fill_gradientn(name = "Probability", colours =  cole,
+    values = rescale(c(minZ, diffZ/10., diffZ/2.,  90*maxZ/100., maxZ)),
+    breaks=extended_breaks(5))
+  p3 = p2 + theme_nickg(9) + #theme(legend.position="none") +
+      scale_y_continuous(expand=c(0,0)) + scale_x_continuous(expand=c(0,0))
+  ## tmpPointMean =  geom_point(data = tableMeanMax, aes_string(x = paste0(name1,"Mean"),
+  ##                 y = paste0(name2, "Mean")), shape = 21, fill = "white",
+  ##   colour = NA, size = 2.5, alpha=0.8)
+  ## tmpPointML =  geom_point(data = tableMeanMax, aes_string(x = paste0(name1, "ML"),
+  ##                 y = paste0(name2, "ML")), shape = 23, fill = "white",
+  ##   colour = NA, size = 2.5, alpha=0.8)
+  ## p4 = p3 + tmpPointMean + tmpPointML
+}
+
+plotRep01 = plotFunc(0,1,"beta","alpha") + coord_cartesian(xlim=c(0,4), ylim=c(100,160))
+## print(plotRep01)
+
+plotRep02 = plotFunc(0,2,"beta","Y1 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+## print(plotRep02)
+plotRep03 = plotFunc(0,3,"beta","Y1 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+plotRep04 = plotFunc(0,4,"beta","Y2 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+plotRep05 = plotFunc(0,5,"beta","Y4 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+plotRep06 = plotFunc(0,6,"beta","Y5 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, ncol=3, nrow=2)
+
+
+## plotRep34 = plotFunc(3,4,"alpha","Y1 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep35 = plotFunc(3,5,"alpha","Y2 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep36 = plotFunc(3,6,"alpha","Y4 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep37 = plotFunc(3,7,"alpha","Y5 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+## plotRep38 = plotFunc(3,8,"alpha","Y6 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+
+## plotRep45 = plotFunc(4,5,"Y1 I.C.","Y2 I.C.")# + coord_cartesian(xlim=c(0, 50), ylim=c(0,50))
+
+## plotRep46 = plotFunc(4,6,"Y1 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep47 = plotFunc(4,7,"Y1 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep48 = plotFunc(4,8,"Y1 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+
+## #print(plotRep45)
+
+## plotRep56 = plotFunc(5,6,"Y2 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep57 = plotFunc(5,7,"Y2 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep58 = plotFunc(5,8,"Y2 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+
+## plotRep67 = plotFunc(6,7,"Y4 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+## plotRep68 = plotFunc(6,8,"Y4 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+
+## plotRep78 = plotFunc(7,8,"Y5 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+
+bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, ncol=3, nrow=2)
+## ##ggsave("RepJointsGrid2.pdf",
+##    arrangeGrob(plotRep23, plotRep24, plotRep25, plotRep26, plotRep27, plotRep28,
+##               plotRep34, plotRep35, plotRep36, plotRep37, plotRep38,
+##               plotRep45, plotRep46, plotRep47, plotRep48,
+##              plotRep56, plotRep57, plotRep58,
+##              plotRep67,plotRep68,
+##               plotRep78,           
+##                 nrow = 7, ncol=3), width= 7.5, height=10)

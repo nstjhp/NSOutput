@@ -166,7 +166,7 @@ class Marginals(object):
             for index, probability in enumerate(bin_heights):
                 for another_index in range(len(bin_heights)):
                     #print index, another_index, probability[another_index][pair_index]
-                    print("{:g}\t{:g}\t{:g}\tParam{:d}\tParam{:d}".format(self.lower_bounds[parameterX] + bin_widthX*(index + 0.5), self.lower_bounds[parameterY] + bin_widthY*(another_index + 0.5), probability[another_index][pair_index]/bin_widthX/bin_widthY, parameterX, parameterY))
+                    print("{:g}\t{:g}\t{:g}\tParam{:d}\tParam{:d}\t{:g}\t{:g}".format(self.lower_bounds[parameterX] + bin_widthX*(index + 0.5), self.lower_bounds[parameterY] + bin_widthY*(another_index + 0.5), probability[another_index][pair_index]/bin_widthX/bin_widthY, parameterX, parameterY, bin_widthX, bin_widthY))
 
         return
 
@@ -186,12 +186,13 @@ if __name__=="__main__":
     ##records = np.loadtxt("simpleData.txt")
     ##nickneeds = Marginals(records,[10]*2)
 
+    ##records = np.loadtxt("simpleData.txt")
     ##newrecords = np.column_stack((records,abs(records[:,2] - records[:,3])))
     ##nickneeds = Marginals(newrecords,[10,10,5])
 
-    #records = np.loadtxt("REP.txt")
-    #nickneeds = Marginals(records, [60, 120, 20, 20, 20, 20, 20], 
-    #             [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
+    # records = np.loadtxt("REP.txt")
+    # nickneeds = Marginals(records, [60, 90, 50, 50, 50, 50, 50], 
+    #              [0,100,0,0,0,0,0], [6,160,50,50,50,50,50])
 
     #nickneeds.print_marginals()
     nickneeds.print_joints()
