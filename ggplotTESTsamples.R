@@ -139,6 +139,9 @@ bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, p
 
 
 ## Lydia
+aa = read.table("lydia.marginals")
+ggplot(aa, aes(x=aa$V1)) + geom_ribbon(aes(ymin=0,ymax=aa$V2), fill="blue",  alpha=0.2, colour="blue") + facet_wrap(~V3, scales="free", ncol=2)
+
 jointData = read.table("lydia.joints")
 colnames(jointData) = c("X","Y","Z", "Xname", "Yname", "width", "height")
 

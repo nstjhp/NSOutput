@@ -202,8 +202,8 @@ if __name__=="__main__":
                                    records[:,1], records[:,2:6]/np.log(10)))
     nickneeds = Marginals(new_records,[50]*4, [0.,5.8,0.,0.], [6., 11.,0.04,43.])
 
-    ##nickneeds.print_marginals()
-    nickneeds.print_joints()
+    nickneeds.print_marginals()
+    ##nickneeds.print_joints()
 
 
 # for parameter in range(np.shape(nickneeds.fillbins())[1]):
