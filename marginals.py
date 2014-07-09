@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+import sys
+
 import numpy as np
 from itertools import combinations as iter_combi
 
@@ -78,7 +81,10 @@ class Marginals(object):
 	important work!"""
         # binheights = np.array([None]*self.numParams*np.max(self.bins), 
         #            dtype=np.float64).reshape((np.max(self.bins),self.numParams))
+
         binheights = np.zeros((np.max(self.bins),self.numParams))
+        new_binheights = [np.zeros((n_bins, 1)) for n_bins in self.bins]
+
         all_binwidths = Marginals.getbinwidths(self)
         for i in range(self.numParams):
             binwidth = all_binwidths[i]
@@ -90,8 +96,10 @@ class Marginals(object):
                 bin_sum = np.sum(self.logweights[in_bin])
 		#print(i,j,bin_sum)
                 binheights[j][i] = bin_sum
+                new_binheights[i][j] = bin_sum
         #print "mysum",np.nansum(binheights)
-        return binheights
+        
+	return new_binheights
    
     def fill_joint_bins(self):
         """Fill the joint bins with the probability weights. Does the most 
@@ -149,6 +157,25 @@ class Marginals(object):
                       probability[parameter]/bin_widths[parameter], parameter))
         return  
 
+    def new_print_marginals(self):
+        """Currently prints out the results in the format required.
+        It's possible the binned probabilities need to be divided by their
+        binwidths either in fillbins() or in a separate function. Do this to
+        normalise properly (i.e. so area = 1)."""
+        #bin_heights = Marginals.fill_bins(self)
+        filled_bins = self.fill_bins()
+        bin_widths = self.getbinwidths()
+        #for parameter in range(np.shape(bin_heights)[1]):
+        #    for index, probability in enumerate(bin_heights):
+        for parameter, bin in enumerate(filled_bins):
+            for index, probability in enumerate(bin):
+                #print parameter, index, probability
+                print("{:g}\t{:g}\tParam{:d}".format(self.lower_bounds[
+                      parameter] + bin_widths[parameter]*(index + 0.5),
+                                                    probability[0]/bin_widths[parameter], parameter))
+        return
+
+
     def print_joints(self):
 	"""Currently does ??????
         It's possible the binned probabilities need to be divided by their
@@ -202,7 +229,7 @@ if __name__=="__main__":
                                    records[:,1], records[:,2:6]/np.log(10)))
     nickneeds = Marginals(new_records,[50]*4, [0.,5.8,0.,0.], [6., 11.,0.04,43.])
 
-    nickneeds.print_marginals()
+    nickneeds.new_print_marginals()
     ##nickneeds.print_joints()
 
 
