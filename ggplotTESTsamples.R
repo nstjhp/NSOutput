@@ -81,8 +81,9 @@ plotFunc <- function(variable1, variable2, name1, name2) {
   p2 = p1 + scale_fill_gradientn(name = "Probability", colours =  cole,
     values = rescale(c(minZ, diffZ/10., diffZ/2.,  90*maxZ/100., maxZ)),
     breaks=extended_breaks(5))
-  p3 = p2 + theme_nickg(9) + #theme(legend.position="none") +
+  p3 = p2 + theme_nickg(8) + theme(legend.position="none", plot.margin = grid::unit(c(0.4, 0.5, 0.0, 0.02), "lines")) +
       scale_y_continuous(expand=c(0,0)) + scale_x_continuous(expand=c(0,0))
+  p4 = p3 + labs(x=name1, y=name2) 
   ## tmpPointMean =  geom_point(data = tableMeanMax, aes_string(x = paste0(name1,"Mean"),
   ##                 y = paste0(name2, "Mean")), shape = 21, fill = "white",
   ##   colour = NA, size = 2.5, alpha=0.8)
@@ -92,44 +93,47 @@ plotFunc <- function(variable1, variable2, name1, name2) {
   ## p4 = p3 + tmpPointMean + tmpPointML
 }
 
-plotRep01 = plotFunc(0,1,"beta","alpha") + coord_cartesian(xlim=c(0,4), ylim=c(100,160))
+plotRep01 = plotFunc(0,1,"beta","alpha") + coord_cartesian(xlim=c(0,4), ylim=c(100,160)) + theme(legend.position="none")
 ## print(plotRep01)
 
-plotRep02 = plotFunc(0,2,"beta","Y1 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+plotRep02 = plotFunc(0,2,"beta","Y1 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50)) + theme(legend.position="none")
 ## print(plotRep02)
-plotRep03 = plotFunc(0,3,"beta","Y1 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
-plotRep04 = plotFunc(0,4,"beta","Y2 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
-plotRep05 = plotFunc(0,5,"beta","Y4 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
-plotRep06 = plotFunc(0,6,"beta","Y5 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50))
+plotRep03 = plotFunc(0,3,"beta","Y2 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50)) + theme(legend.position="none")
+plotRep04 = plotFunc(0,4,"beta","Y4 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50)) + theme(legend.position="none")
+plotRep05 = plotFunc(0,5,"beta","Y5 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50)) + theme(legend.position="none")
+plotRep06 = plotFunc(0,6,"beta","Y6 I.C.") + coord_cartesian(xlim=c(0,4), ylim=c(0,50)) + theme(legend.position="none")
 bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, ncol=3, nrow=2)
 
 
-## plotRep12 = plotFunc(1,2,"alpha","Y1 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep13 = plotFunc(1,3,"alpha","Y2 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep14 = plotFunc(1,4,"alpha","Y4 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep15 = plotFunc(1,5,"alpha","Y5 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
-## plotRep16 = plotFunc(1,6,"alpha","Y6 I.C.")# + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))
+plotRep12 = plotFunc(1,2,"alpha","Y1 I.C.") + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))## + theme(legend.position="none")
+plotRep13 = plotFunc(1,3,"alpha","Y2 I.C.") + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))## + theme(legend.position="none")
+plotRep14 = plotFunc(1,4,"alpha","Y4 I.C.") + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))## + theme(legend.position="none")
+plotRep15 = plotFunc(1,5,"alpha","Y5 I.C.") + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))## + theme(legend.position="none")
+plotRep16 = plotFunc(1,6,"alpha","Y6 I.C.") + coord_cartesian(xlim=c(100, 160), ylim=c(0,50))## + theme(legend.position="none")
 
-## plotRep23 = plotFunc(2,3,"Y1 I.C.","Y2 I.C.")# + coord_cartesian(xlim=c(0, 50), ylim=c(0,50))
+bigplot <- grid.arrange(plotRep12, plotRep13, plotRep14, plotRep15, plotRep16, ncol=3, nrow=2)
 
-## plotRep24 = plotFunc(2,4,"Y1 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep25 = plotFunc(2,5,"Y1 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep26 = plotFunc(2,6,"Y1 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+plotRep23 = plotFunc(2,3,"Y1 I.C.","Y2 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+plotRep24 = plotFunc(2,4,"Y1 I.C.","Y4 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+plotRep25 = plotFunc(2,5,"Y1 I.C.","Y5 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+plotRep26 = plotFunc(2,6,"Y1 I.C.","Y6 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
 
-## #print(plotRep23)
+bigplot <- grid.arrange(plotRep23, plotRep24, plotRep25, plotRep26, ncol=3, nrow=2)
 
-## plotRep34 = plotFunc(3,4,"Y2 I.C.","Y4 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep35 = plotFunc(3,5,"Y2 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep36 = plotFunc(3,6,"Y2 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-                           
-## plotRep45 = plotFunc(4,5,"Y4 I.C.","Y5 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-## plotRep46 = plotFunc(4,6,"Y4 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
-                           
-## plotRep56 = plotFunc(5,6,"Y5 I.C.","Y6 I.C.")# + coord_cartesian(xlim=c(0,50), ylim=c(0,50))
+plotRep34 = plotFunc(3,4,"Y2 I.C.","Y4 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+plotRep35 = plotFunc(3,5,"Y2 I.C.","Y5 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+plotRep36 = plotFunc(3,6,"Y2 I.C.","Y6 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+                                                                                             
+plotRep45 = plotFunc(4,5,"Y4 I.C.","Y5 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+plotRep46 = plotFunc(4,6,"Y4 I.C.","Y6 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
+                                                                                             
+plotRep56 = plotFunc(5,6,"Y5 I.C.","Y6 I.C.") + coord_cartesian(xlim=c(0,50), ylim=c(0,50))## + theme(legend.position="none")
 
-bigplot <- grid.arrange(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, ncol=3, nrow=2)
-## ##ggsave("RepJointsGrid2.pdf",
-##    arrangeGrob(plotRep23, plotRep24, plotRep25, plotRep26, plotRep27, plotRep28,
+bigplot <- grid.arrange(plotRep34, plotRep35, plotRep36, plotRep45, plotRep46, plotRep56, ncol=3, nrow=2)
+
+hugePlot = arrangeGrob(plotRep01, plotRep02, plotRep03, plotRep04, plotRep05, plotRep06, plotRep12, plotRep13, plotRep14, plotRep15, plotRep16, plotRep23, plotRep24, plotRep25, plotRep26, plotRep34, plotRep35, plotRep36, plotRep45, plotRep46, plotRep56, ncol=3, nrow=7)
+print(hugePlot)
+   ## ##ggsave("RepJointsGrid2.pdf",
 ##               plotRep34, plotRep35, plotRep36, plotRep37, plotRep38,
 ##               plotRep45, plotRep46, plotRep47, plotRep48,
 ##              plotRep56, plotRep57, plotRep58,
